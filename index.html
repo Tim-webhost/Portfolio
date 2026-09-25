@@ -1,0 +1,813 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Timileyin Sulemon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,650&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E0D0B;
+    --panel:#17140F;
+    --panel-2:#1E1A13;
+    --line:#332C22;
+    --paper:#F5EFE2;
+    --paper-dim:#DCD3BF;
+    --brass:#E3A34E;
+    --brass-dim:#B87F35;
+    --tape:#5BC1B4;
+    --ash:#A79C8A;
+    --ash-dim:#79705F;
+    color-scheme: dark;
+    font-size: 16px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+  ::selection{ background:var(--brass); color:var(--ink); }
+
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Archivo', system-ui, sans-serif;
+    line-height:1.5;
+    padding-inline: clamp(20px, 5vw, 64px);
+    padding-block: 0;
+    cursor: none;
+  }
+  @media (pointer: coarse){ body{ cursor:auto; } }
+
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight:560;
+    letter-spacing:-0.01em;
+    text-wrap: balance;
+    margin:0;
+  }
+  .mono{
+    font-family:'JetBrains Mono', ui-monospace, Menlo, monospace;
+  }
+  a{ color:inherit; }
+  button{ font-family:inherit; }
+
+  .wrap{ max-width:1180px; margin-inline:auto; }
+  section{ padding-block: clamp(44px, 7vw, 84px); border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+
+  .eyebrow{
+    display:flex; align-items:center; gap:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:.75rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--tape); margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:var(--tape); box-shadow:0 0 0 3px rgba(91,193,180,.18);
+    flex:none;
+  }
+
+  /* ---------- custom cursor ---------- */
+  #cursor-dot, #cursor-ring{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:999;
+    border-radius:50%; transform:translate(-50%,-50%);
+    will-change: transform;
+  }
+  #cursor-dot{ width:6px; height:6px; background:var(--brass); }
+  #cursor-ring{
+    width:34px; height:34px; border:1px solid var(--ash-dim);
+    transition: width .25s ease, height .25s ease, border-color .25s ease, background-color .25s ease;
+  }
+  .cursor-hover #cursor-ring{
+    width:56px; height:56px; border-color:var(--brass); background:rgba(227,163,78,.08);
+  }
+  @media (pointer: coarse){ #cursor-dot, #cursor-ring{ display:none; } }
+
+  /* ---------- scrubber nav ---------- */
+  .scrubber{
+    position:sticky; top: env(safe-area-inset-top, 0px);
+    z-index:50; background:rgba(14,13,11,.86); backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--line);
+    margin-inline: calc(-1 * clamp(20px, 5vw, 64px));
+    padding-inline: clamp(20px, 5vw, 64px);
+  }
+  .scrubber-inner{
+    max-width:1180px; margin-inline:auto;
+    display:flex; align-items:center; gap: clamp(14px, 2.4vw, 30px);
+    overflow-x:auto; scrollbar-width:none; padding-block:14px;
+  }
+  .scrubber-inner::-webkit-scrollbar{ display:none; }
+  .scrub-name{
+    font-family:'Fraunces', serif; font-weight:560; font-size:1rem;
+    color:var(--paper); flex:none; padding-right:6px; border-right:1px solid var(--line);
+    margin-right:4px;
+  }
+  .scrub-btn{
+    flex:none; background:none; border:none; color:var(--ash-dim);
+    font-family:'JetBrains Mono', monospace; font-size:.72rem; letter-spacing:.06em;
+    display:flex; align-items:center; gap:8px; padding:6px 2px; cursor:pointer;
+    white-space:nowrap;
+  }
+  .scrub-btn .t{ color:var(--ash-dim); }
+  .scrub-btn .dot{ width:5px; height:5px; border-radius:50%; background:var(--ash-dim); transition:.2s; }
+  .scrub-btn.active{ color:var(--paper); }
+  .scrub-btn.active .t{ color:var(--brass); }
+  .scrub-btn.active .dot{ background:var(--brass); box-shadow:0 0 0 3px rgba(227,163,78,.2); }
+
+  /* ---------- hero ---------- */
+  #intro{ padding-top: clamp(56px, 10vw, 96px); border-bottom:1px solid var(--line); }
+  .hero-grid{ display:grid; gap:28px; }
+  .hero-kicker{
+    font-family:'JetBrains Mono', monospace; font-size:.78rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ash);
+  }
+  .hero-kicker b{ color:var(--brass); font-weight:600; }
+  h1.hero-title{
+    font-size: clamp(2.4rem, 6.4vw, 5rem); line-height:1.03;
+    max-width: 15ch;
+  }
+  h1.hero-title em{ font-style:italic; color:var(--brass); }
+  .hero-sub{
+    max-width:56ch; color:var(--paper-dim); font-size:clamp(1rem,1.6vw,1.15rem);
+  }
+  canvas#wave{ width:100%; height:150px; display:block; margin-block:8px 4px; }
+  .hero-cta{ display:flex; flex-wrap:wrap; gap:14px; margin-top:6px; }
+  .btn{
+    font-family:'JetBrains Mono', monospace; font-size:.82rem; letter-spacing:.03em;
+    padding:13px 22px; border-radius:2px; border:1px solid var(--line);
+    background:transparent; color:var(--paper); cursor:pointer;
+    display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+    transition: border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .btn:hover{ border-color:var(--brass); color:var(--brass); transform:translateY(-1px); }
+  .btn.primary{ background:var(--brass); color:var(--ink); border-color:var(--brass); }
+  .btn.primary:hover{ background:var(--brass-dim); border-color:var(--brass-dim); color:var(--ink); }
+  .btn .arrow{ transition: transform .2s ease; }
+  .btn:hover .arrow{ transform:translateX(3px); }
+
+  .stat-row{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line); margin-top:8px;
+  }
+  .stat{ background:var(--ink); padding:18px 16px; }
+  .stat .n{ font-family:'Fraunces',serif; font-size:1.5rem; color:var(--brass); }
+  .stat .l{ font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--ash); letter-spacing:.05em; text-transform:uppercase; margin-top:4px; }
+
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns: 1fr; gap:36px; }
+  @media (min-width:760px){ .about-grid{ grid-template-columns: 1.1fr .9fr; align-items:stretch; } }
+  .about-copy p{ color:var(--paper-dim); max-width:60ch; }
+  .about-copy p + p{ margin-top:14px; }
+  .monogram-block{
+    aspect-ratio: 4 / 5; border:1px solid var(--line); position:relative; overflow:hidden;
+    background:
+      repeating-linear-gradient(90deg, var(--panel) 0 1px, transparent 1px 34px);
+  }
+  @media (min-width:760px){ .monogram-block{ aspect-ratio:auto; height:100%; } }
+  .monogram-block .mono-mark{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-weight:340; font-size:clamp(4rem,11vw,7rem);
+    color:var(--panel-2); -webkit-text-stroke: 1px var(--ash-dim); letter-spacing:-.03em;
+  }
+  .monogram-block .mono-photo{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 12%;
+  }
+  .about-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+  .tag{
+    font-family:'JetBrains Mono',monospace; font-size:.7rem; letter-spacing:.03em;
+    border:1px solid var(--line); color:var(--ash); padding:6px 10px; border-radius:2px;
+  }
+
+  /* ---------- reveal ---------- */
+  .reveal{ transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+  .js .reveal{ opacity:0; transform:translateY(22px); }
+  .js .reveal.in{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){ .js .reveal{ opacity:1; transform:none; transition:none; } }
+
+  /* ---------- case studies ---------- */
+  .case{ display:grid; gap:44px; }
+  @media (min-width:860px){ .case{ grid-template-columns: .92fr 1.08fr; align-items:flex-start; } }
+  .case-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:10px; }
+  .case h2{ font-size:clamp(1.7rem,3.4vw,2.5rem); max-width:16ch; }
+  .case-role{ font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--ash); white-space:nowrap; }
+  .case-copy p{ color:var(--paper-dim); max-width:58ch; }
+  .case-copy p + p{ margin-top:12px; }
+  .case-label{ font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--tape); margin-top:20px; margin-bottom:8px; display:block; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .live-links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+  .live-links .btn{ padding:10px 16px; font-size:.76rem; }
+
+  .frame{
+    border:1px solid var(--line); background:var(--panel); border-radius:3px; overflow:hidden;
+  }
+  .frame-bar{
+    display:flex; align-items:center; gap:7px; padding:11px 14px; border-bottom:1px solid var(--line);
+    background:var(--panel-2);
+  }
+  .frame-bar span{ width:8px; height:8px; border-radius:50%; background:var(--line); }
+  .frame-bar .url{
+    margin-left:8px; font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--ash-dim);
+    background:var(--ink); border:1px solid var(--line); padding:4px 10px; border-radius:20px; flex:1;
+  }
+  .frame-body{ padding:22px; min-height:230px; }
+  .frame-body.tight{ padding:0; min-height:0; }
+  .shot{ display:block; width:100%; height:auto; }
+
+  /* real-screenshot tab switcher */
+  .frame-tab-radio{ position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+  .frame-tabs{ margin-left:auto; display:flex; gap:6px; }
+  .frame-tab{
+    font-family:'JetBrains Mono',monospace; font-size:.64rem; letter-spacing:.02em;
+    color:var(--ash-dim); cursor:pointer; padding:4px 10px; border-radius:20px;
+    border:1px solid var(--line); white-space:nowrap; transition:.2s ease;
+  }
+  .frame-tab:hover{ color:var(--paper); }
+  .real-badge{
+    font-family:'JetBrains Mono',monospace; font-size:.6rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--tape); border:1px solid var(--tape); border-radius:20px; padding:3px 8px; flex:none;
+  }
+  .shot-cap{ font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--ash-dim); margin-top:10px; }
+
+  .shot-a, .shot-b{ display:none; }
+  #dtTabA:checked ~ .frame-body .shot-a{ display:block; }
+  #dtTabB:checked ~ .frame-body .shot-b{ display:block; }
+  #dtTabA:checked ~ .frame-bar .tab-a{ color:var(--brass); border-color:var(--brass); }
+  #dtTabB:checked ~ .frame-bar .tab-b{ color:var(--brass); border-color:var(--brass); }
+
+  /* restaurant before/after */
+  .ba-toggle-row{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .ba-toggle{ position:relative; width:52px; height:28px; flex:none; }
+  .ba-toggle input{ position:absolute; inset:0; opacity:0; cursor:pointer; margin:0; }
+  .ba-track{ position:absolute; inset:0; background:var(--panel-2); border:1px solid var(--line); border-radius:20px; transition:.25s; }
+  .ba-thumb{ position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%; background:var(--ash-dim); transition:.25s; }
+  .ba-toggle input:checked ~ .ba-track{ border-color:var(--brass); }
+  .ba-toggle input:checked ~ .ba-thumb{ left:26px; background:var(--brass); }
+  .ba-toggle-label{ font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--ash); }
+
+  .ba-empty{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px; min-height:186px; color:var(--ash-dim); }
+  .ba-empty .big{ font-family:'Fraunces',serif; font-size:1.1rem; color:var(--ash); }
+  .ba-full{ display:none; }
+  .ba-content.after .ba-empty{ display:none; }
+  .ba-content.after .ba-full{ display:block; }
+
+  /* tim-tool demo */
+  .tt-area{ display:flex; flex-direction:column; gap:10px; }
+  .tt-area textarea{
+    width:100%; min-height:120px; background:var(--ink); border:1px solid var(--line); color:var(--paper-dim);
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; padding:12px; border-radius:2px; resize:vertical;
+  }
+  .tt-actions{ display:flex; align-items:center; gap:12px; }
+  .tt-out{
+    min-height:70px; border:1px solid var(--line); border-radius:2px; padding:12px; font-size:.9rem;
+    color:var(--paper); background:var(--panel-2);
+  }
+  .tt-note{ font-family:'JetBrains Mono',monospace; font-size:.66rem; color:var(--ash-dim); }
+
+  /* reel strip */
+  .reel-strip{ display:flex; gap:1px; overflow-x:auto; background:var(--line); border:1px solid var(--line); scrollbar-width:none; }
+  .reel-strip::-webkit-scrollbar{ display:none; }
+  .reel-item{ background:var(--ink); flex:0 0 auto; width:min(78vw,300px); padding:22px 20px; }
+  .reel-item .tc{ font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--tape); }
+  .reel-item h3{ font-size:1.05rem; margin-top:10px; }
+  .reel-item p{ color:var(--ash); font-size:.85rem; margin-top:8px; }
+
+  /* inline audio player */
+  .player{ display:flex; align-items:center; gap:10px; margin-top:14px; }
+  .player-btn{
+    flex:none; width:28px; height:28px; border-radius:50%; border:1px solid var(--tape); background:transparent;
+    color:var(--tape); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+    transition:background .2s ease, color .2s ease;
+  }
+  .player-btn:hover{ background:var(--tape); color:var(--ink); }
+  .player-btn .icon-play{
+    width:0; height:0; border-style:solid; border-width:5px 0 5px 8px;
+    border-color:transparent transparent transparent currentColor; margin-left:2px;
+  }
+  .player-btn .icon-pause{ display:none; position:relative; width:8px; height:9px; }
+  .player-btn .icon-pause::before, .player-btn .icon-pause::after{
+    content:''; position:absolute; top:0; width:3px; height:9px; background:currentColor;
+  }
+  .player-btn .icon-pause::before{ left:0; }
+  .player-btn .icon-pause::after{ right:0; }
+  .player-btn.playing .icon-play{ display:none; }
+  .player-btn.playing .icon-pause{ display:block; }
+  .player-bar{ position:relative; flex:1; height:4px; background:var(--line); border-radius:2px; cursor:pointer; }
+  .player-fill{ position:absolute; top:0; left:0; height:100%; width:0%; background:var(--tape); border-radius:2px; pointer-events:none; }
+  .player-handle{
+    position:absolute; top:50%; left:0%; width:10px; height:10px; border-radius:50%; background:var(--tape);
+    transform:translate(-50%,-50%); box-shadow:0 0 0 3px rgba(91,193,180,.18); pointer-events:none;
+    transition:width .15s ease, height .15s ease;
+  }
+  .player-bar.scrubbing .player-handle{ width:13px; height:13px; }
+  .player-bar.scrubbing, .player-bar:hover{ cursor:grab; }
+  .player-bar.scrubbing{ cursor:grabbing; }
+  .player-time{ flex:none; font-family:'JetBrains Mono',monospace; font-size:.64rem; color:var(--ash-dim); white-space:nowrap; }
+
+  /* player styled as a launch link (e.g. "watch on YouTube") rather than an inline scrubber */
+  .player-link{ text-decoration:none; cursor:pointer; }
+  .player-link:hover .player-btn{ background:var(--tape); color:var(--ink); }
+  .player-link:hover .player-time{ color:var(--tape); }
+  .player-link .player-time{ transition:color .2s ease; }
+  .player-link .player-time .arrow{ display:inline-block; transition:transform .2s ease; }
+  .player-link:hover .player-time .arrow{ transform:translate(2px,-2px); }
+
+  /* contact */
+  #contact{ padding-bottom: calc(clamp(44px,7vw,84px) + env(safe-area-inset-bottom,0px)); }
+  .contact-grid{ display:grid; gap:26px; }
+  @media (min-width:760px){ .contact-grid{ grid-template-columns:1.2fr .8fr; align-items:end; } }
+  .contact-title{ font-size:clamp(2rem,5.2vw,3.6rem); max-width:14ch; }
+  .contact-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .email-box{
+    display:flex; align-items:center; gap:10px; border:1px solid var(--line); padding:10px 14px; border-radius:2px;
+    font-family:'JetBrains Mono',monospace; font-size:.86rem; background:var(--panel);
+  }
+  .copy-btn{ background:none; border:1px solid var(--line); color:var(--ash); font-family:'JetBrains Mono',monospace; font-size:.68rem; padding:6px 10px; border-radius:2px; cursor:pointer; }
+  .copy-btn:hover{ border-color:var(--brass); color:var(--brass); }
+  .contact-meta{ color:var(--ash); font-size:.85rem; max-width:34ch; }
+  footer{ padding-top:44px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--ash-dim); }
+</style>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<nav class="scrubber">
+  <div class="scrubber-inner" id="scrubber">
+    <span class="scrub-name">T.S.</span>
+    <button class="scrub-btn" data-target="intro"><span class="dot"></span><span class="t">00:00</span> Intro</button>
+    <button class="scrub-btn" data-target="about"><span class="dot"></span><span class="t">00:24</span> About</button>
+    <button class="scrub-btn" data-target="derotech"><span class="dot"></span><span class="t">00:52</span> Derotech</button>
+    <button class="scrub-btn" data-target="shaolin"><span class="dot"></span><span class="t">01:20</span> Shaolin-Kungfu</button>
+    <button class="scrub-btn" data-target="timtool"><span class="dot"></span><span class="t">01:48</span> Tim-Tool</button>
+    <button class="scrub-btn" data-target="reel"><span class="dot"></span><span class="t">02:15</span> Reel</button>
+    <button class="scrub-btn" data-target="contact"><span class="dot"></span><span class="t">02:40</span> Contact</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="intro">
+    <div class="hero-grid">
+      <p class="hero-kicker"><b>SCROLL TO PLAY</b> — PRODUCT &amp; UX DESIGNER</p>
+      <h1 class="hero-title">I turn problems into <em>working</em> products.</h1>
+      <canvas id="wave" aria-hidden="true"></canvas>
+      <p class="hero-sub">Timileyin Sulemon — a researcher, designer, and builder who takes a real problem from a blank page to a live, working product, directing AI-assisted development from concept through to release. First-Class Honours graduate in Media &amp; Communication.</p>
+      <div class="hero-cta">
+        <button class="btn primary" data-scroll="derotech">View the work <span class="arrow">→</span></button>
+        <button class="btn" data-scroll="contact">Get in touch</button>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">3</div><div class="l">Shipped products</div></div>
+        <div class="stat"><div class="n">0→1</div><div class="l">Every project, self-directed</div></div>
+        <div class="stat"><div class="n">1st</div><div class="l">Class Honours, Media &amp; Comm.</div></div>
+        <div class="stat"><div class="n">5+yrs</div><div class="l">Designing &amp; creating brands and products</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="about-grid reveal">
+      <div class="about-copy">
+        <p class="eyebrow">About</p>
+        <p>My creative streak started at eight, with a saxophone — and it never really left. Throughout university it kept showing up, in visual and written work as much as music, and by the end I was awarded Best Dissertation in the School of Computing &amp; Digital Media.</p>
+        <p>After graduating, I realised creativity on its own wasn't enough — I wanted to point it at problems businesses actually have. So I took courses in brand marketing, UI/UX, and how to direct AI tools effectively without losing creative control or cutting corners.</p>
+        <p>Friends would call me stubborn. I have a hard time letting a problem go until I've actually found what's causing it — and I don't think there's much that's truly impossible, just things nobody's worked at long enough.</p>
+        <p>I studied Media &amp; Communication, not computer science — I learned to build by pointing AI tools with the same precision I once pointed a camera: frame the problem, direct every detail, and cut until it works. I research the problem, design the solution, and direct the build end‑to‑end.</p>
+        <p>That process now runs the digital side of a live company, has turned a restaurant with zero online presence into one that takes bookings and orders, and built multiple tools that quietly save me real time and money every week.</p>
+        <div class="about-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">AI-directed development</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">Netlify</span>
+          <span class="tag">User research</span>
+          <span class="tag">Canva / Photoshop</span>
+          <span class="tag">Video &amp; audio editing</span>
+          <span class="tag">Brand &amp; product marketing</span>
+          <span class="tag">Prototyping</span>
+          <span class="tag">Copywriting / content strategy</span>
+          <span class="tag">Data-informed design</span>
+        </div>
+      </div>
+      <div>
+        <div class="monogram-block"><img class="mono-photo" src="shots/headshot.jpg" alt="Timileyin Sulemon"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="derotech">
+    <div class="case reveal">
+      <div>
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Case study 01</p>
+            <h2>Derotech Offshore Services</h2>
+          </div>
+          <span class="case-role mono">JAN 2026 — PRESENT</span>
+        </div>
+        <div class="case-copy">
+          <p>Derotech had no real digital presence, and the internal and external forms the business relied on were paper-based — slow, easy to lose, and impossible to secure properly.</p>
+          <p>I designed and built the company website end-to-end, then identified the forms problem myself and built <strong>DerotechForms</strong>, a secure remote-access portal now used company-wide for internal and external submissions, with department-scoped admin logins for uploading, replacing, and retiring individual forms — all as the only person handling digital work at the company.</p>
+        </div>
+        <span class="case-label">Stack</span>
+        <div class="tag-row">
+          <span class="tag">Figma</span><span class="tag">AI-directed development</span><span class="tag">GitHub</span><span class="tag">Netlify</span><span class="tag">Secure deployment</span>
+        </div>
+        <div class="live-links">
+          <a class="btn" href="https://derotechforms.netlify.app/" target="_blank" rel="noopener">Open DerotechForms <span class="arrow">↗</span></a>
+          <a class="btn" href="https://derotechdraft.netlify.app/" target="_blank" rel="noopener">Open company site <span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div class="frame">
+        <input type="radio" name="dtTab" id="dtTabA" class="frame-tab-radio" checked>
+        <input type="radio" name="dtTab" id="dtTabB" class="frame-tab-radio">
+        <div class="frame-bar"><span></span><span></span><span></span>
+          <div class="frame-tabs">
+            <label for="dtTabA" class="frame-tab tab-a">DerotechForms</label>
+            <label for="dtTabB" class="frame-tab tab-b">Company site</label>
+          </div>
+        </div>
+        <div class="frame-body tight">
+          <img class="shot shot-a" src="shots/derotechforms-register.jpg" alt="Real screenshot of the live DerotechForms register — search bar, department filters, and form cards">
+          <img class="shot shot-b" src="shots/derotech-hero.jpg" alt="Real screenshot of the live Derotech Offshore Services company website homepage">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="shaolin">
+    <div class="case reveal">
+      <div>
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Case study 02</p>
+            <h2>Shaolin-Kungfu Chinese Restaurant</h2>
+          </div>
+          <span class="case-role mono">FREELANCE · APR–MAY 2024</span>
+        </div>
+        <div class="case-copy">
+          <p>A newly opened restaurant had no website, no online menu, and no way to take a booking or a delivery order without a phone call. I pitched them on the spot and secured the project myself.</p>
+          <p>I designed and built a full site with an interactive menu, a table reservation system, and integrated ordering links to Chowdeck and Glovo — end-to-end, from first sketch to a live site.</p>
+        </div>
+        <span class="case-label">Stack</span>
+        <div class="tag-row">
+          <span class="tag">AI-directed development</span><span class="tag">GitHub</span><span class="tag">Netlify</span><span class="tag">Order integrations</span>
+        </div>
+        <div class="live-links">
+          <a class="btn" href="https://shaolinkungfu.netlify.app/shaolin-kungfu.html" target="_blank" rel="noopener">Open live site <span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div class="frame">
+        <div class="frame-bar"><span></span><span></span><span></span><div class="url">shaolinkungfu.netlify.app</div></div>
+        <div class="frame-body">
+          <div class="ba-toggle-row">
+            <label class="ba-toggle">
+              <input type="checkbox" id="baToggle" aria-label="Toggle before and after">
+              <span class="ba-track"></span><span class="ba-thumb"></span>
+            </label>
+            <span class="ba-toggle-label" id="baLabel">BEFORE — no website</span>
+          </div>
+          <div class="ba-content">
+            <div class="ba-empty">
+              <div class="big">No online presence</div>
+              <div>Bookings and orders — phone only</div>
+            </div>
+            <div class="ba-full">
+              <img class="shot" src="shots/shaolin-hero.jpg" alt="Real screenshot of the live restaurant site's homepage — Authentic Chinese Taste">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timtool">
+    <div class="case reveal">
+      <div>
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Case study 03</p>
+            <h2>Tim-Tool</h2>
+          </div>
+          <span class="case-role mono">PERSONAL · ONGOING</span>
+        </div>
+        <div class="case-copy">
+          <p>My own recurring problem: text copied from a PDF into Notion arrived broken — stray line breaks, extra spaces, and using only a sliver of the page width. Fixing it by hand ate into study time.</p>
+          <p>I built a tool with a direct Notion API connection that reformats the text and pastes it into the right page automatically — no need to even open Notion. It saves roughly 5 minutes per use and about $144 a year against a paid alternative.</p>
+        </div>
+        <div class="live-links">
+          <a class="btn" href="https://timtool.netlify.app/" target="_blank" rel="noopener">Open live tool <span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div>
+        <div class="frame">
+          <div class="frame-bar"><span></span><span></span><span></span><div class="url">timtool.netlify.app</div><span class="real-badge">Real tool</span></div>
+          <div class="frame-body tight">
+            <img class="shot" src="shots/timtool-real.jpg" alt="Real screenshot of the live, Notion-connected Tim-Tool cleaning up a pasted paragraph">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reel">
+    <p class="eyebrow reveal" style="margin-inline:0">Other work</p>
+    <h2 class="reveal" style="max-width:22ch;font-size:clamp(1.6rem,3.2vw,2.3rem);margin-bottom:28px;">Skills and interests outside of product design.</h2>
+    <div class="reel-strip reveal">
+      <div class="reel-item">
+        <div class="tc">CAMERA OP &amp; EDITOR</div>
+        <h3>Exploring Spirituality</h3>
+        <p>Documentary, shot on a Sony A7, cut in Adobe Premiere Pro.</p>
+        <a class="player player-link" href="https://youtu.be/Kc95EsHpBKo" target="_blank" rel="noopener">
+          <span class="player-btn" aria-hidden="true"><span class="icon-play"></span></span>
+          <span class="player-time mono">Watch on YouTube <span class="arrow">↗</span></span>
+        </a>
+      </div>
+      <div class="reel-item">
+        <div class="tc">PRODUCER &amp; EDITOR</div>
+        <h3>Homelessness in Islington</h3>
+        <p>Podcast, produced and mixed in Adobe Audition.</p>
+        <div class="player" data-src="audio/homelessness-in-islington.mp3">
+          <button class="player-btn" aria-label="Play">
+            <span class="icon-play"></span>
+            <span class="icon-pause"></span>
+          </button>
+          <div class="player-bar">
+            <div class="player-fill"></div>
+            <div class="player-handle"></div>
+          </div>
+          <span class="player-time mono">0:00 / 0:00</span>
+        </div>
+      </div>
+      <div class="reel-item">
+        <div class="tc">CO-FOUNDER</div>
+        <h3>Christmas Foodbank, Stockwell</h3>
+        <p>Running 5+ years. I lead all media: photography, video, audio, and social.</p>
+      </div>
+      <div class="reel-item">
+        <div class="tc">SELF-TAUGHT</div>
+        <h3>Saxophone</h3>
+        <p>Playing since childhood — the same patience that goes into a good interface.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="contact-grid reveal">
+      <div>
+        <p class="eyebrow">Get in touch</p>
+        <h2 class="contact-title">Let's build something that works.</h2>
+      </div>
+      <div>
+        <div class="contact-row">
+          <div class="email-box">sulemontimileyin01@gmail.com <button class="copy-btn" id="copyEmail">Copy</button></div>
+        </div>
+        <div class="contact-row" style="margin-top:14px">
+          <a class="btn" href="https://www.linkedin.com/in/timileyin-sulemon-759245205/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn" href="tel:+447883630677">+44 7883 630677</a>
+        </div>
+        <p class="contact-meta" style="margin-top:18px">Based in London, UK. Right to work in the UK — no sponsorship required.</p>
+      </div>
+    </div>
+    <footer>
+      <span>© <span id="yr"></span> Timileyin Sulemon</span>
+      <span>Designed &amp; built the same way as everything above it.</span>
+    </footer>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isCoarse = window.matchMedia('(pointer: coarse)').matches;
+
+  /* ---- custom cursor ---- */
+  if (!isCoarse) {
+    var dot = document.getElementById('cursor-dot');
+    var ring = document.getElementById('cursor-ring');
+    var mx = window.innerWidth/2, my = window.innerHeight/2;
+    var rx = mx, ry = my;
+    window.addEventListener('mousemove', function(e){
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = 'translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
+    });
+    function loop(){
+      rx += (mx-rx)*0.18; ry += (my-ry)*0.18;
+      ring.style.transform = 'translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';
+      requestAnimationFrame(loop);
+    }
+    loop();
+    document.querySelectorAll('a, button, textarea, .ba-toggle, .frame-tab, .player-bar').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ document.body.classList.add('cursor-hover'); });
+      el.addEventListener('mouseleave', function(){ document.body.classList.remove('cursor-hover'); });
+    });
+  }
+
+  /* ---- hero waveform ---- */
+  var canvas = document.getElementById('wave');
+  var ctx = canvas.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio||1, 2);
+  var mouseX = 0.5, targetX = 0.5;
+  var scrollAmp = 1;
+
+  function sizeCanvas(){
+    var r = canvas.getBoundingClientRect();
+    canvas.width = r.width*dpr; canvas.height = r.height*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+  window.addEventListener('mousemove', function(e){ targetX = e.clientX/window.innerWidth; });
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    scrollAmp = Math.max(0.35, 1 - y/900);
+  }, { passive: true });
+
+  var barsN = 64;
+  var t = 0;
+  function drawWave(){
+    var w = canvas.getBoundingClientRect().width;
+    var h = canvas.getBoundingClientRect().height;
+    ctx.clearRect(0,0,w,h);
+    mouseX += (targetX-mouseX)*0.05;
+    var gap = w/barsN;
+    for (var i=0;i<barsN;i++){
+      var nx = i/barsN;
+      var dist = Math.abs(nx-mouseX);
+      var influence = Math.max(0, 1-dist*2.2);
+      var base = Math.sin(t*0.04 + i*0.35) * 0.5 + 0.5;
+      var amp = (0.14 + base*0.5 + influence*0.55) * scrollAmp;
+      var barH = Math.max(3, amp*h*0.9);
+      var x = i*gap + gap*0.28;
+      var bw = gap*0.44;
+      var y = h/2 - barH/2;
+      ctx.fillStyle = influence>0.35 ? '#E3A34E' : 'rgba(91,193,180,'+(0.35+base*0.35)+')';
+      ctx.fillRect(x, y, bw, barH);
+    }
+    t++;
+    if(!reduceMotion) requestAnimationFrame(drawWave);
+  }
+  drawWave();
+
+  /* ---- scroll buttons ---- */
+  document.querySelectorAll('[data-scroll]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(btn.getAttribute('data-scroll'));
+      if(target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' });
+    });
+  });
+  document.querySelectorAll('.scrub-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(btn.getAttribute('data-target'));
+      if(target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block:'start' });
+    });
+  });
+
+  /* ---- active section tracking ---- */
+  var sections = ['intro','about','derotech','shaolin','timtool','reel','contact'];
+  var navBtns = {};
+  document.querySelectorAll('.scrub-btn').forEach(function(b){ navBtns[b.getAttribute('data-target')] = b; });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        Object.keys(navBtns).forEach(function(k){ navBtns[k].classList.remove('active'); });
+        var id = entry.target.id;
+        if(navBtns[id]) navBtns[id].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) io.observe(el);
+  });
+
+  /* ---- reveal on scroll ---- */
+  var revealIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ entry.target.classList.add('in'); revealIo.unobserve(entry.target); }
+    });
+  }, { threshold: 0.14 });
+  document.querySelectorAll('.reveal').forEach(function(el){ revealIo.observe(el); });
+
+  /* ---- before/after toggle ---- */
+  var baToggle = document.getElementById('baToggle');
+  var baLabel = document.getElementById('baLabel');
+  var baContent = document.querySelector('.ba-content');
+  if(baToggle){
+    baToggle.addEventListener('change', function(){
+      baLabel.textContent = baToggle.checked ? 'AFTER — live site' : 'BEFORE — no website';
+      if(baContent) baContent.classList.toggle('after', baToggle.checked);
+    });
+  }
+
+  /* ---- inline audio player ---- */
+  function fmtTime(s){
+    if(!isFinite(s) || s < 0) s = 0;
+    s = Math.floor(s);
+    var m = Math.floor(s/60), sec = s%60;
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+  document.querySelectorAll('.player').forEach(function(p){
+    if(!p.hasAttribute('data-src')) return; // player-link controls (e.g. YouTube launch) aren't real audio players
+    var src = p.getAttribute('data-src');
+    var audio = new Audio(src);
+    audio.preload = 'metadata';
+    var btn = p.querySelector('.player-btn');
+    var bar = p.querySelector('.player-bar');
+    var fill = p.querySelector('.player-fill');
+    var handle = p.querySelector('.player-handle');
+    var timeEl = p.querySelector('.player-time');
+
+    function render(){
+      var dur = audio.duration || 0;
+      var cur = audio.currentTime || 0;
+      var pct = dur ? (cur / dur * 100) : 0;
+      fill.style.width = pct + '%';
+      handle.style.left = pct + '%';
+      timeEl.textContent = fmtTime(cur) + ' / ' + fmtTime(dur);
+    }
+    audio.addEventListener('loadedmetadata', render);
+    audio.addEventListener('timeupdate', render);
+    audio.addEventListener('ended', function(){
+      btn.classList.remove('playing');
+      btn.setAttribute('aria-label', 'Play');
+    });
+    btn.addEventListener('click', function(){
+      if(audio.paused){
+        audio.play();
+        btn.classList.add('playing');
+        btn.setAttribute('aria-label', 'Pause');
+      } else {
+        audio.pause();
+        btn.classList.remove('playing');
+        btn.setAttribute('aria-label', 'Play');
+      }
+    });
+    function seek(e){
+      var rect = bar.getBoundingClientRect();
+      var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      var pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      if(audio.duration) audio.currentTime = pct * audio.duration;
+      render();
+    }
+    var dragging = false;
+    bar.addEventListener('mousedown', function(e){
+      dragging = true;
+      bar.classList.add('scrubbing');
+      seek(e);
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', function(e){
+      if(dragging) seek(e);
+    });
+    window.addEventListener('mouseup', function(){
+      if(dragging){ dragging = false; bar.classList.remove('scrubbing'); }
+    });
+    bar.addEventListener('touchstart', function(e){
+      dragging = true;
+      bar.classList.add('scrubbing');
+      seek(e);
+    }, { passive: true });
+    window.addEventListener('touchmove', function(e){
+      if(dragging) seek(e);
+    }, { passive: true });
+    window.addEventListener('touchend', function(){
+      if(dragging){ dragging = false; bar.classList.remove('scrubbing'); }
+    });
+  });
+
+  /* ---- tim-tool demo ---- */
+  var ttRun = document.getElementById('ttRun');
+  var ttInput = document.getElementById('ttInput');
+  var ttOut = document.getElementById('ttOut');
+  function cleanUp(raw){
+    return raw.split('\n')
+      .map(function(l){ return l.trim(); })
+      .filter(Boolean)
+      .join(' ')
+      .replace(/\s+/g,' ')
+      .replace(/\s+([.,;:])/g,'$1')
+      .trim();
+  }
+  if(ttRun){
+    ttRun.addEventListener('click', function(){
+      ttOut.textContent = cleanUp(ttInput.value);
+    });
+  }
+
+  /* ---- copy email ---- */
+  var copyBtn = document.getElementById('copyEmail');
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var text = 'sulemontimileyin01@gmail.com';
+      function done(){ copyBtn.textContent='Copied'; setTimeout(function(){ copyBtn.textContent='Copy'; },1800); }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){
+          var r=document.createRange(); r.selectNode(copyBtn.previousSibling||copyBtn.parentElement);
+          var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); done();
+        });
+      }
+    });
+  }
+})();
+</script>
+
+</body></html>
