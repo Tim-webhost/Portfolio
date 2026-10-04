@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Timileyin Sulemon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -224,6 +223,21 @@
   }
   .shot-cap{ font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--ash-dim); margin-top:10px; }
 
+  /* certificate showcase */
+  .cert-group{ padding:18px; display:flex; flex-direction:column; gap:14px; }
+  .cert-card{
+    background:var(--paper); border-radius:4px; padding:12px; display:flex; flex-direction:column; gap:10px;
+    text-decoration:none; border:1px solid transparent; transition:border-color .2s ease, transform .2s ease;
+  }
+  .cert-card:hover{ border-color:var(--brass); transform:translateY(-1px); }
+  .cert-card img{ display:block; width:100%; height:auto; border-radius:2px; }
+  .cert-card .cert-cap{
+    font-family:'JetBrains Mono',monospace; font-size:.66rem; letter-spacing:.02em;
+    color:var(--ink); opacity:.62; display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .cert-card .cert-cap .arrow{ opacity:.8; transition:transform .2s ease; }
+  .cert-card:hover .cert-cap .arrow{ transform:translate(2px,-2px); }
+
   .shot-a, .shot-b{ display:none; }
   #dtTabA:checked ~ .frame-body .shot-a{ display:block; }
   #dtTabB:checked ~ .frame-body .shot-b{ display:block; }
@@ -334,8 +348,9 @@
     <button class="scrub-btn" data-target="derotech"><span class="dot"></span><span class="t">00:52</span> Derotech</button>
     <button class="scrub-btn" data-target="shaolin"><span class="dot"></span><span class="t">01:20</span> Shaolin-Kungfu</button>
     <button class="scrub-btn" data-target="timtool"><span class="dot"></span><span class="t">01:48</span> Tim-Tool</button>
-    <button class="scrub-btn" data-target="reel"><span class="dot"></span><span class="t">02:15</span> Reel</button>
-    <button class="scrub-btn" data-target="contact"><span class="dot"></span><span class="t">02:40</span> Contact</button>
+    <button class="scrub-btn" data-target="growth"><span class="dot"></span><span class="t">02:12</span> Growth</button>
+    <button class="scrub-btn" data-target="reel"><span class="dot"></span><span class="t">02:38</span> Reel</button>
+    <button class="scrub-btn" data-target="contact"><span class="dot"></span><span class="t">03:04</span> Contact</button>
   </div>
 </nav>
 
@@ -343,10 +358,10 @@
 
   <section id="intro">
     <div class="hero-grid">
-      <p class="hero-kicker"><b>SCROLL TO PLAY</b> — PRODUCT &amp; UX DESIGNER</p>
+      <p class="hero-kicker"><b>SCROLL TO PLAY</b> — PRODUCT &amp; UX DESIGNER · GROWTH &amp; MARKETING</p>
       <h1 class="hero-title">I turn problems into <em>working</em> products.</h1>
       <canvas id="wave" aria-hidden="true"></canvas>
-      <p class="hero-sub">Timileyin Sulemon — a researcher, designer, and builder who takes a real problem from a blank page to a live, working product, directing AI-assisted development from concept through to release. First-Class Honours graduate in Media &amp; Communication.</p>
+      <p class="hero-sub">Timileyin Sulemon — a researcher, designer, and builder who takes a real problem from a blank page to a live, working product, directing AI-assisted development from concept through to release. The same research-first approach runs my marketing work — data-driven paid campaigns and brand strategy, not guesswork. First-Class Honours graduate in Media &amp; Communication.</p>
       <div class="hero-cta">
         <button class="btn primary" data-scroll="derotech">View the work <span class="arrow">→</span></button>
         <button class="btn" data-scroll="contact">Get in touch</button>
@@ -369,6 +384,7 @@
         <p>Friends would call me stubborn. I have a hard time letting a problem go until I've actually found what's causing it — and I don't think there's much that's truly impossible, just things nobody's worked at long enough.</p>
         <p>I studied Media &amp; Communication, not computer science — I learned to build by pointing AI tools with the same precision I once pointed a camera: frame the problem, direct every detail, and cut until it works. I research the problem, design the solution, and direct the build end‑to‑end.</p>
         <p>That process now runs the digital side of a live company, has turned a restaurant with zero online presence into one that takes bookings and orders, and built multiple tools that quietly save me real time and money every week.</p>
+        <p>On the marketing side, I've planned and run paid media campaigns (Meta &amp; Google Ads) freelance for independent brands — testing creative variants and refining targeting against engagement data — and delivered social media and competitor analysis for Sudocrem's national "Not Just for Babies" campaign, work that led directly to a job offer from the people I worked with.</p>
         <div class="about-tags">
           <span class="tag">Figma</span>
           <span class="tag">AI-directed development</span>
@@ -381,6 +397,10 @@
           <span class="tag">Prototyping</span>
           <span class="tag">Copywriting / content strategy</span>
           <span class="tag">Data-informed design</span>
+          <span class="tag">Paid Media (Meta &amp; Google Ads)</span>
+          <span class="tag">Campaign &amp; Competitor Strategy</span>
+          <span class="tag">Google Analytics Certified</span>
+          <span class="tag">AI-Powered Performance Ads Certified</span>
         </div>
       </div>
       <div>
@@ -498,6 +518,43 @@
           <div class="frame-bar"><span></span><span></span><span></span><div class="url">timtool.netlify.app</div><span class="real-badge">Real tool</span></div>
           <div class="frame-body tight">
             <img class="shot" src="shots/timtool-real.jpg" alt="Real screenshot of the live, Notion-connected Tim-Tool cleaning up a pasted paragraph">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="growth">
+    <div class="case reveal">
+      <div>
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Case study 04</p>
+            <h2>Growth &amp; Paid Media Campaigns</h2>
+          </div>
+          <span class="case-role mono">FREELANCE · 2024 — ONGOING</span>
+        </div>
+        <div class="case-copy">
+          <p>Alongside product work, I plan and run data-driven marketing campaigns freelance — treating each one as a hypothesis to test rather than a one-off brief.</p>
+          <p>For Sudocrem's national "Not Just for Babies" campaign (Teva Pharmaceutical), I delivered social media and competitor analysis and developed the campaign and content strategy. I've also planned and run Meta and Google Ads campaigns for independent brands, testing creative variants and refining targeting against engagement data to lift conversion rates.</p>
+        </div>
+        <span class="case-label">Skills</span>
+        <div class="tag-row">
+          <span class="tag">Campaign Strategy</span><span class="tag">Competitor Analysis</span><span class="tag">Meta &amp; Google Ads</span><span class="tag">Google Analytics Certified</span><span class="tag">AI-Powered Performance Ads Certified</span>
+        </div>
+      </div>
+      <div class="frame">
+        <div class="frame-bar"><span></span><span></span><span></span><div class="url">certifications</div></div>
+        <div class="frame-body tight">
+          <div class="cert-group">
+            <a class="cert-card" href="https://skillshop.credential.net/42162947-a3c5-4c3c-a9b0-a806ef08531a?record_view=true" target="_blank" rel="noopener">
+              <img src="shots/cert-google-analytics.jpg" alt="Google Analytics Certification badge for Timileyin Sulemon, issued 4 October 2026, certificate ID 196231727">
+              <span class="cert-cap">Google Analytics Certification — Renewed Oct 2026 <span class="arrow">↗</span></span>
+            </a>
+            <a class="cert-card" href="https://skillshop.credential.net/a033dfef-e7ff-424c-afe2-b6df4619f258?record_view=true" target="_blank" rel="noopener">
+              <img src="shots/cert-ai-ads.jpg" alt="AI-Powered Performance Ads Certification badge for Timileyin Sulemon, issued 4 October 2026, certificate ID 196231076">
+              <span class="cert-cap">AI-Powered Performance Ads Certification — Renewed Oct 2026 <span class="arrow">↗</span></span>
+            </a>
           </div>
         </div>
       </div>
@@ -662,7 +719,7 @@
   });
 
   /* ---- active section tracking ---- */
-  var sections = ['intro','about','derotech','shaolin','timtool','reel','contact'];
+  var sections = ['intro','about','derotech','shaolin','timtool','growth','reel','contact'];
   var navBtns = {};
   document.querySelectorAll('.scrub-btn').forEach(function(b){ navBtns[b.getAttribute('data-target')] = b; });
   var io = new IntersectionObserver(function(entries){
@@ -809,5 +866,3 @@
   }
 })();
 </script>
-
-</body></html>
